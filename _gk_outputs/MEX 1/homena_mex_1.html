@@ -7483,7 +7483,8 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <main style="font-family: TeX Gyre Termes; font-size: 1.2rem">
-<h3 id="MEX-%231---Geyzson-Kristoffer">MEX #1 - Geyzson Kristoffer<a class="anchor-link" href="#MEX-%231---Geyzson-Kristoffer">¶</a></h3><p><a href="https://uvle.upd.edu.ph/mod/assign/view.php?id=531880">https://uvle.upd.edu.ph/mod/assign/view.php?id=531880</a></p>
+<h3 id="MEX-%231---Geyzson-Kristoffer">MEX #1 - Geyzson Kristoffer<a class="anchor-link" href="#MEX-%231---Geyzson-Kristoffer">¶</a></h3><p>SN:2023-21036</p>
+<p><a href="https://uvle.upd.edu.ph/mod/assign/view.php?id=531880">https://uvle.upd.edu.ph/mod/assign/view.php?id=531880</a></p>
 <hr/>
 </main></div>
 </div>
@@ -7620,15 +7621,22 @@ dtype: object
 <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">8</span><span class="p">]</span> <span class="c1"># heating load only</span>
 
 <span class="c1"># splitting the data into train, validation, and test sets</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># 60/40 split</span>
-<span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># splitting further to get the 60/20/20 split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                            <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+                                            <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># 60/40 split</span>
+ <span class="c1"># splitting further to get the 60/20/20 split</span>
+<span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span>
+                                                <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                                <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span>
 
 <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># from 10**-1 to 10**1, 10 values</span>
 <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of models</span>
 
-<span class="c1"># creating models with different alphas</span>
+<span class="c1"># creating models with different alphas and</span>
+<span class="c1"># making pipelines with standard scaler and ridge regression</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alphas</span><span class="p">):</span>
-    <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span> <span class="c1"># making pipelines with standard scaler and ridge regression</span>
+    <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span>
+                                <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
 
 <span class="c1"># printing the accuracy and alpha of each model</span>
 <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
@@ -7755,6 +7763,8 @@ Alpha:  10.000000 | Training Accuracy:  0.905468 | Validation Accuracy:  0.92202
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<br/>
+<br/>
 <h1 id="Item-1-a"><strong>Item 1-a</strong><a class="anchor-link" href="#Item-1-a">¶</a></h1><p>Question: What is the best model’s coefficients, intercept, and its training, validation, and test accuracy?</p>
 <p>Answer:</p>
 <table>
@@ -7802,7 +7812,7 @@ Alpha:  10.000000 | Training Accuracy:  0.905468 | Validation Accuracy:  0.92202
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<p>Performing the same procedure but using the top features</p>
+<p>Performing the same procedure but using the top 5 features</p>
 </div>
 </div>
 </div>
@@ -7820,9 +7830,9 @@ Alpha:  10.000000 | Training Accuracy:  0.905468 | Validation Accuracy:  0.92202
 <span class="n">top5_feature_names</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">8</span><span class="p">][</span><span class="n">sorted_indices</span><span class="p">[:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Top 5 Features:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2"> names:"</span><span class="p">,</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top5_feature_names</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2"> coefficients:"</span><span class="p">,</span> <span class="n">top5_coef</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2"> indices:"</span><span class="p">,</span> <span class="n">sorted_indices</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">" names:"</span><span class="p">,</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top5_feature_names</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">" coefficients:"</span><span class="p">,</span> <span class="n">top5_coef</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">" indices:"</span><span class="p">,</span> <span class="n">sorted_indices</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -7836,9 +7846,9 @@ Alpha:  10.000000 | Training Accuracy:  0.905468 | Validation Accuracy:  0.92202
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Top 5 Features:
-	 names: Overall Height, Relative Compactness, Roof Area, Surface Area, Glazing Area
-	 coefficients: [ 7.8326222  -6.05743799 -3.40185598 -3.03910856  2.71987256]
-	 indices: [4 0 3 1 6]
+ names: Overall Height, Relative Compactness, Roof Area, Surface Area, Glazing Area
+ coefficients: [ 7.8326222  -6.05743799 -3.40185598 -3.03910856  2.71987256]
+ indices: [4 0 3 1 6]
 </pre>
 </div>
 </div>
@@ -7865,18 +7875,25 @@ Alpha:  10.000000 | Training Accuracy:  0.905468 | Validation Accuracy:  0.92202
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># X will now be the top 5 features</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">8</span><span class="p">]</span> <span class="c1"># still the heating load</span>
 
 <span class="c1"># splitting the data into train, validation, and test sets</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># 60/40 split</span>
-<span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># splitting further to get the 60/20/20 split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                            <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+                                            <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span> <span class="c1"># 60/40 split</span>
+ <span class="c1"># splitting further to get the 60/20/20 split</span>
+<span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span>
+                                                <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                                <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">)</span>
 
 <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># from 10**-1 to 10**1, 10 values</span>
 <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of models</span>
 
-<span class="c1"># creating models with different alphas</span>
+<span class="c1"># creating models with different alphas and</span>
+<span class="c1"># making pipelines with standard scaler and ridge regression</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alphas</span><span class="p">):</span>
-    <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span> <span class="c1"># making pipelines with standard scaler and ridge regression</span>
+    <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span>
+                                <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span> 
 
 <span class="c1"># printing the accuracy and alpha of each model</span>
 <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
@@ -7965,7 +7982,7 @@ Alpha:  10.000000 | Training Accuracy:  0.904202 | Validation Accuracy:  0.92657
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># print the model with the same alpha as the best model but with the top 5 features</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># for comparison, printing the model with the same alpha but with the top 5 features</span>
 <span class="n">alpha</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="s1">'ridge__alpha'</span><span class="p">]</span>
 <span class="n">coef</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="s1">'ridge'</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span>
 <span class="n">intercept</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_params</span><span class="p">()[</span><span class="s1">'ridge'</span><span class="p">]</span><span class="o">.</span><span class="n">intercept_</span>
@@ -8095,17 +8112,25 @@ Alpha:  10.000000 | Training Accuracy:  0.904202 | Validation Accuracy:  0.92657
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <h1 id="Problem-%231---Insights"><strong>Problem #1 - Insights</strong><a class="anchor-link" href="#Problem-%231---Insights">¶</a></h1><p>Q: Based on your results for this Problem, what insights did you gain?</p>
 <p>A: Here are some insights</p>
 <ul>
 <li>In the preliminary analysis, the five most significant features, ranked by magnitude in descending order, are <em>Overall Height, Relative Compactness, Roof Area, Surface Area, and Glazing Area.</em></li>
-<li>As anticipated, the coefficients associated with these top 5 features underwent changes.</li>
+<li>As anticipated, the coefficients associated with these top 5 features were different.</li>
 <li>No variance was observed in the intercept values.</li>
 <li>Notably, there was a decline in Training accuracy across both the "Top 5 with same alpha" and "Top 5 best model" scenarios.</li>
 <li>Conversely, Validation accuracy exhibited an uptick in both aforementioned scenarios.</li>
-<li>Testing accuracy showed a mixed bag: it improved under the "Top 5 with same alpha" but declined in the "Top 5 best model" setup.</li>
-<li>If computational resources permit, it's advantageous to incorporate all available features.</li>
+<li>Testing accuracy showed a mixed results: it improved under the "Top 5 with same alpha" but declined in the "Top 5 best model" setup.</li>
+<li>If computational resources permit, it would be advantageous to incorporate all available features.</li>
 <li>Opting for just the top-ranked features doesn't guarantee an enhancement in testing accuracy.</li>
+<li>The regularization parameter, alpha, barely made an impact since the range is from 10<strong>-1 to 10</strong>1. But when I tested it on a wider range, the results were dramatically different.</li>
+<li>The accuracy may increase if we add Polynomial Features of a certain degree to the pipeline. For instance, a separate analysis I made with PolynomialFeatures(degree=3) yield higher accuracy in its best model compared to the models above.</li>
+<li>For cold countries aiming to optimize heating load, focus on compact, lower-height designs with increased roof areas and limited glazed surfaces for enhanced energy efficiency.</li>
 </ul>
 </div>
 </div>
@@ -8890,9 +8915,13 @@ dtype: object
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="c1"># features</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="c1"># diagnosis</span>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="c1"># 70/30 split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                                    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">69</span><span class="p">,</span>
+                                                    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="c1"># 70/30 split</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">LogisticRegression</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c1"># model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span>
+                      <span class="n">LogisticRegression</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c1"># model</span>
 
 <span class="n">train_accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c1"># accuracy</span>
 <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="c1"># accuracy</span>
@@ -8906,9 +8935,9 @@ dtype: object
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Training Accuracy: </span><span class="si">{</span><span class="n">train_accuracy</span><span class="w"> </span><span class="si">:</span><span class="s1"> .6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Testing Accuracy: </span><span class="si">{</span><span class="n">test_accuracy</span><span class="w"> </span><span class="si">:</span><span class="s1"> .6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Most Important Features:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Feature Magnitudes in Descending Order:"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">sorted_indices</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">feature_names</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">feature_importance</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="si">{</span><span class="n">feature_names</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">feature_importance</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8923,70 +8952,37 @@ dtype: object
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Training Accuracy:  0.987437
 Testing Accuracy:  0.982456
-Most Important Features:
-texture3: 1.22297
-radius2: 1.08966
-concavity3: 1.04051
-concavity1: 1.02640
-area2: 1.00383
-compactness2: 0.99125
-symmetry3: 0.91455
-area3: 0.88047
-radius3: 0.85664
-concave_points1: 0.84292
-concave_points3: 0.80083
-perimeter3: 0.68378
-smoothness3: 0.57744
-fractal_dimension2: 0.52852
-texture1: 0.48488
-compactness1: 0.44272
-perimeter2: 0.41542
-symmetry2: 0.39675
-area1: 0.36899
-concave_points2: 0.35139
-smoothness2: 0.32736
-perimeter1: 0.29978
-radius1: 0.29569
-texture2: 0.23883
-compactness3: 0.19358
-concavity2: 0.18930
-fractal_dimension1: 0.11576
-fractal_dimension3: 0.08977
-smoothness1: 0.02459
-symmetry1: 0.01009
-
-Testing Accuracy:  0.982456
-Most Important Features:
-texture3: 1.22297
-radius2: 1.08966
-concavity3: 1.04051
-concavity1: 1.02640
-area2: 1.00383
-compactness2: 0.99125
-symmetry3: 0.91455
-area3: 0.88047
-radius3: 0.85664
-concave_points1: 0.84292
-concave_points3: 0.80083
-perimeter3: 0.68378
-smoothness3: 0.57744
-fractal_dimension2: 0.52852
-texture1: 0.48488
-compactness1: 0.44272
-perimeter2: 0.41542
-symmetry2: 0.39675
-area1: 0.36899
-concave_points2: 0.35139
-smoothness2: 0.32736
-perimeter1: 0.29978
-radius1: 0.29569
-texture2: 0.23883
-compactness3: 0.19358
-concavity2: 0.18930
-fractal_dimension1: 0.11576
-fractal_dimension3: 0.08977
-smoothness1: 0.02459
-symmetry1: 0.01009
+Feature Magnitudes in Descending Order:
+	texture3: 1.22297
+	radius2: 1.08966
+	concavity3: 1.04051
+	concavity1: 1.02640
+	area2: 1.00383
+	compactness2: 0.99125
+	symmetry3: 0.91455
+	area3: 0.88047
+	radius3: 0.85664
+	concave_points1: 0.84292
+	concave_points3: 0.80083
+	perimeter3: 0.68378
+	smoothness3: 0.57744
+	fractal_dimension2: 0.52852
+	texture1: 0.48488
+	compactness1: 0.44272
+	perimeter2: 0.41542
+	symmetry2: 0.39675
+	area1: 0.36899
+	concave_points2: 0.35139
+	smoothness2: 0.32736
+	perimeter1: 0.29978
+	radius1: 0.29569
+	texture2: 0.23883
+	compactness3: 0.19358
+	concavity2: 0.18930
+	fractal_dimension1: 0.11576
+	fractal_dimension3: 0.08977
+	smoothness1: 0.02459
+	symmetry1: 0.01009
 </pre>
 </div>
 </div>
@@ -9000,7 +8996,7 @@ symmetry1: 0.01009
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Item-2-a"><strong>Item 2-a</strong><a class="anchor-link" href="#Item-2-a">¶</a></h1><p>Q:  After fitting the data, what is the model’s training and testing accuracy? Which features are most important?</p>
-<p>A: The model's training and testing accuracy, together with the most important features:</p>
+<p>A: The model's training and testing accuracy, together with 5 of the most important features:</p>
 <table>
 <thead>
 <tr>
@@ -9084,7 +9080,8 @@ symmetry1: 0.01009
 
 <span class="n">ypred_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 <span class="n">cfm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ypred_train</span><span class="p">)</span>
-<span class="n">cm_display</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">cfm</span><span class="p">,</span> <span class="n">display_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Benign"</span><span class="p">,</span> <span class="s2">"Malignant"</span><span class="p">])</span>
+<span class="n">cm_display</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">cfm</span><span class="p">,</span>
+                                    <span class="n">display_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Benign"</span><span class="p">,</span> <span class="s2">"Malignant"</span><span class="p">])</span>
 <span class="n">cm_display</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Confusion Matrix for Training Data'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -9161,14 +9158,40 @@ False Alarm Rate:  0.004000
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Item-2-b-training"><strong>Item 2-b-training</strong><a class="anchor-link" href="#Item-2-b-training">¶</a></h1><p>Confusion Matrix, ROC Curve, AUC are above</p>
-<p>| Evaluation Metric                | Score
-|------------------------|---------------|
-| Training AUC     | 0.99727      |
-| Train Accuracy      | 0.987437      |
-| Recall      | 0.972973      |
-| Precision       |0.993103       |
-| F1 Score       |0.982935       |
-| False Alarm Rate       |0.004000       |</p>
+<table>
+<thead>
+<tr>
+<th>Evaluation Metric</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training AUC</td>
+<td>0.99727</td>
+</tr>
+<tr>
+<td>Train Accuracy</td>
+<td>0.987437</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>0.972973</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>0.993103</td>
+</tr>
+<tr>
+<td>F1 Score</td>
+<td>0.982935</td>
+</tr>
+<tr>
+<td>False Alarm Rate</td>
+<td>0.004000</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -9193,7 +9216,8 @@ False Alarm Rate:  0.004000
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">ypred_test</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">cfm2</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">ypred_test</span><span class="p">)</span>
-<span class="n">cm_display2</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">cfm2</span><span class="p">,</span> <span class="n">display_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Benign"</span><span class="p">,</span> <span class="s2">"Malignant"</span><span class="p">])</span>
+<span class="n">cm_display2</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">cfm2</span><span class="p">,</span>
+                                     <span class="n">display_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Benign"</span><span class="p">,</span> <span class="s2">"Malignant"</span><span class="p">])</span>
 <span class="n">cm_display2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Confusion Matrix for Testing Data'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -9269,14 +9293,40 @@ False Alarm Rate:  0.009346
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Item-2-b-testing"><strong>Item 2-b-testing</strong><a class="anchor-link" href="#Item-2-b-testing">¶</a></h1><p>Confusion Matrix, ROC Curve, AUC are above</p>
-<p>| Evaluation Metric                | Score
-|------------------------|---------------|
-| Testing AUC     | 0.99796      |
-| Testing Accuracy      | 0.982456      |
-| Recall      | 0.968750      |
-| Precision       |0.984127       |
-| F1 Score       |0.976378       |
-| False Alarm Rate       |0.009346      |</p>
+<table>
+<thead>
+<tr>
+<th>Evaluation Metric</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Testing AUC</td>
+<td>0.99796</td>
+</tr>
+<tr>
+<td>Testing Accuracy</td>
+<td>0.982456</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>0.968750</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>0.984127</td>
+</tr>
+<tr>
+<td>F1 Score</td>
+<td>0.976378</td>
+</tr>
+<tr>
+<td>False Alarm Rate</td>
+<td>0.009346</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -9287,13 +9337,47 @@ False Alarm Rate:  0.009346
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<br/>
+<br/>
+<br/>
+<br/>
 <h1 id="Problem-%232---Insights"><strong>Problem #2 - Insights</strong><a class="anchor-link" href="#Problem-%232---Insights">¶</a></h1><p>Q: Based on your results for this Problem, what insights did you gain?</p>
 <p>A: Here are some insights</p>
 <ul>
 <li>Interestingly, the testing data's AUC marginally surpasses that of the training data.</li>
 <li>As expected, training data accuracy outperforms testing data accuracy.</li>
 <li>Metrics such as Recall, Precision, F1 Score, and False Alarm rate exhibit better values in the training data compared to the testing data.</li>
+<li>Since the accuracy of the testing data is relatively high, the model may generize well with unseen data.</li>
+<li>The model demonstrates a typical performance pattern, where training accuracy is higher than testing accuracy, suggesting no overfitting issues.</li>
+<li>The model effectively balances sensitivity and specificity, minimizing both false negatives and false positives, which is vital in medical diagnostics.</li>
+<li>To accurately predict tumor malignancy, medical practitioners should prioritize evaluating texture, radius, concavity, and tumor area, as these features have the highest predictive power.</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>=======END OF SOLUTIONS=======</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Course Code: AI 221</p>
+<p>Course Name: Classical Machine Learning</p>
+<p>Submitted By: Geyzson Kristoffer S. Homena</p>
+<p>Submitted To: Karl Ezra S. Pilario, PhD</p>
+<p>1st Semester 2023-2024</p>
 </div>
 </div>
 </div>
