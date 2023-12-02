@@ -1,0 +1,194 @@
+
+\documentclass{acm_proc_article-sp}
+\begin{document}
+% --- Author Metadata here ---
+%\conferenceinfo{AI 201 Programming Assignment}{Manila, Philippines}
+%\setpagenumber{1}
+%\CopyrightYear{2023} % Allows default copyright year (1999) to be over-ridden - IF NEED BE.
+% --- End of Author Metadata ---
+\title{AI201 Programming Assignment 2\\Naive Bayes Spam Filter}
+
+\numberofauthors{1}
+\author{
+\alignauthor GEYZSON KRISTOFFER S. HOMENA
+~\\
+Date of Submission: November 27, 2023
+}
+
+\maketitle
+
+
+\section{Introduction}~\\
+The pervasive issue of unsolicited bulk email, commonly known as "spam," has been a persistent challenge since the inception of the internet. The surge in spam has catalyzed the need for more sophisticated and effective spam filtering mechanisms. Among the various approaches, the Naive Bayes Classifier stands out for its simplicity and operational efficiency. This probabilistic machine learning model is a form of supervised learning, where the categorization of data is guided by pre-determined labels during the training phase. This paper delves into the Naive Bayes method, examining its principles, effectiveness, and the nuances of its application in spam detection. We experiment with different smoothing parameters (lambda values) and assess the impact of varying the selection of the most indicative words in the vocabulary on the classifier’s accuracy. Through this paper, we aim to understand why and how Naive Bayes remains a top-tier method in the ongoing battle against spam.
+
+\section{Objectives}~\\
+The primary objective of this paper is to conduct a thorough examination of the Naive Bayes Spam Filter's performance, utilizing the TREC06 corpus as a testing ground, and to analyze the impact of varying the lambda parameter on classification performance. Specifically, we will configure the classifier with lambda values of 0.005, 0.1, 0.5, 1.0, and 2.0 to systematically discern the optimal smoothing parameter that maximizes the precision and recall of spam detection. Furthermore, the paper aims to not only delineate the implementation process of the Naive Bayes classifier but also to rigorously assess its efficacy in segregating spam from non-spam (ham) communications within the dataset. By achieving these goals, this paper endeavors to contribute to the enhancement of spam filtering methodologies and to provide a comprehensive understanding of the Naive Bayes approach in the context of email classification.
+
+\section{Methodology}~\\
+The implementation of the Naive Bayes Spam Filter was carried out using Python, leveraging commonly utilized libraries such as NumPy for numerical processing, Pandas for data manipulation, Matplotlib for visualization, Collections for handling frequency data, and re for regular expressions. It is important to note that our implementation was meticulously handcrafted and we did not employ libraries such as scikit-learn that offer pre-built Naive Bayes classifiers. This ensured a deeper engagement with the algorithm's underlying mechanics and allowed for customized adjustments and optimizations specific to our dataset and goals. The procedure commenced with the training of the model on a corpus of pre-labeled emails, involving an extraction process to isolate distinct words from the body of emails. Utilizing our implementation, we trained the model based on the presence of each word's occurrence in a document in both spam and legitimate emails (referred to as 'ham').
+
+The fundamental assumption of the classifier is the conditional independence of features; it presumes that the presence (or absence) of a particular word is independent of the presence (or absence) of any other word when determining the probability of an email being classified as spam or ham. 'Ham' in this context is used to denote legitimate emails, as opposed to unsolicited spam. However, this assumption may not always hold true in real-world data, as words in natural language often exhibit dependencies. For instance, certain words may appear together more frequently in spam emails, which the standard Naive Bayes classifier would not account for, potentially affecting its predictive accuracy.
+
+In practice, this limitation can lead to suboptimal classification results, particularly in datasets with rich linguistic structures. This challenge is addressed in Hovold's study through the use of word-position-based attributes, which allows the classifier to consider the position of words as an additional feature, potentially capturing some of the dependencies that the standard Naive Bayes classifier ignores. Our methodology acknowledges this limitation and the potential improvement that could be achieved by integrating word position attributes into the feature set, as demonstrated by Hovold (2005) who reported enhanced classification performance with this approach.
+
+Following the model training phase, we proceeded to classify out-of-sample data to evaluate the model’s predictive prowess. The results were meticulously recorded and analyzed, with the classifier's effectiveness being determined by its precision and recall in identifying spam and ham emails under varying lambda parameters. This methodology provides a systematic approach to understanding the nuances of spam detection and the practical application of the Naive Bayes classifier in real-world scenarios.
+~\\~\\
+\subsection{Data Preprocessing}~\\
+For this paper, the TREC06 Public Spam Corpus was selected as the dataset of choice, a standard benchmark utilized extensively in spam detection algorithm research. The dataset underwent an initial extraction phase, followed by a processing stage where each word was identified using a basic regular expression (regex). This regex defines a word as a string of characters bounded by whitespace at the beginning and concluding with a comma, period, or other punctuation marks at the end. Recognizing the potential value contained within the headers and footers of emails, these segments were deliberately retained. This decision is predicated on the notion that headers can include routing information, subject lines, and sender details, while footers may contain unsubscribe links or legal disclaimers, all of which are pertinent in distinguishing spam from legitimate communications. The resulting total vocabulary extracted from the corpus comprised 84,323 unique words.
+
+In the subsequent step, each document was parsed to create a collection of unique, non-repeating words. A count of these words was maintained, which reflected the number of occurrences across all documents rather than within a single document. For instance, if the word "the" appeared three times in document A and once in document B, the cumulative count for "the" would be recorded as two rather than four as it appeared in two documents. This count was diligently cataloged in a Pandas dataframe, which served as the foundation for the frequency-based feature set utilized by the Naive Bayes model. This approach aligns with the fundamental premise of the Naive Bayes algorithm, which considers the presence of a word in the corpus, thereby simplifying the computation and storage requirements for the model.
+
+\subsection{Model Training}~\\
+For the purpose of training and evaluating the Naive Bayes model, the TREC06 corpus was partitioned into two distinct sets: 70\% for training and 30\% for testing. This division was done in such a way as to maintain an equivalent ratio of ham to spam emails within both sets to ensure a balanced representation of both categories in the model's learning and validation phases.
+
+The initial step in the model training involved establishing the vocabulary, which encompasses all unique words encountered across the documents. The calculation of prior probabilities followed, which are indicative of the likelihood of encountering spam or ham emails within the corpus. These probabilities were derived by dividing the total count of documents classified as spam or ham by the overall number of documents, with the results then converted to logarithmic form for computational stability.
+
+In the vanilla Naive Bayes model, complement log probabilities were calculated for words within the vocabulary that did not appear in either ham or spam emails, by subtracting the word's observed frequency from the total number of documents in the respective class and applying a minimal constant 'epsilon' (set to 1e-15) to avoid the undefined result of taking a logarithm of zero. 
+
+The next phase entailed calculating the log-probabilities for the presence of a word in an email, which is the ratio of the word count (the frequency of a word's occurrence across all documents, without considering its frequency within individual documents) to the total number of documents in the respective class (spam or ham).
+
+The model was also designed to compute the log-probabilities of not encountering a word in an email by taking the logarithm of the difference between the total documents and the word count, then normalizing by the class document count. This step is crucial, as the absence of certain words can serve as significant indicators for classification, particularly within datasets where a word's non-presence can be just as telling as its presence.  This complement calculation ensures that they contribute meaningfully to the probability estimation. 
+
+In contrast, with lambda smoothing, we did not need to apply this complement approach for unseen words, as the lambda parameter inherently adjusts the probability estimates to account for words that did not appear in the training data, thereby seamlessly incorporating the presence of unseen words into the model's classification decisions. With the application of lambda smoothing, the model provides every word, including those not present in the training data, with a non-zero probability, thus addressing the zero-probability issue for unseen words and mitigating the over-reliance on non-occurrences as strong indicators.
+
+Finally, mutual information for each word was calculated to quantify the word's informational contribution towards classifying an email as spam or ham. The mutual information was derived by first ascertaining the class priors, followed by the probability of each word’s occurrence both within the entire corpus and within the spam and ham classes. Words were then ranked according to their mutual information scores, and the most informative ones were chosen as features for the classifier, with the anticipation that they would substantially improve the classifier's accuracy in differentiating between spam and ham emails.
+
+\subsection{Model Evaluation}~\\
+To rigorously assess the performance of the Naive Bayes classifier, we employed precision and recall as our primary metrics. Precision measures the model's accuracy in identifying spam emails, indicating the proportion of emails classified as spam that were correctly identified. Recall, on the other hand, evaluates the model’s ability to detect all actual spam emails within the dataset.
+
+Additionally, we utilized a confusion matrix as a tool to visually encapsulate the classifier’s performance. This matrix lays out the true positives (spam correctly identified as spam), true negatives (ham correctly identified as ham), false positives (ham incorrectly labeled as spam), and false negatives (spam incorrectly labeled as ham). The graphical representation provided by the confusion matrix offers an immediate, transparent, and comprehensive overview of the model's classification capabilities, allowing us to pinpoint strengths and weaknesses in spam detection.
+
+Through these evaluation methods, we aimed to achieve a balanced perspective on the classifier's effectiveness, ensuring that it not only accurately identifies spam but also minimizes the misclassification of legitimate emails, thereby maintaining the integrity of communication.
+
+\section{Experimental Results}~\\
+In this section, we delve into the empirical evaluation of the Naive Bayes classifier, focusing on how different settings of the Laplace smoothing parameter, \(\lambda\), influence its performance. We meticulously measured the model's precision and recall—key indicators of its capability to discern spam from ham.
+
+Commencing with the Vanilla Naive Bayes classifier, absent of any smoothing, the precision recorded was 98.50\%, with a recall of 98.64\%. This high level of performance underscores the classifier's inherent accuracy and is visually supported by the confusion matrix presented in Figure 1.
+
+Progressing to a \(\lambda\) value of 2.0, we witnessed a slight increment in precision to 99.02\%, while recall sustained a comparable level at 98.70\%, as exhibited in Figure 2. Reducing \(\lambda\) to 1.0, the precision edged up to 99.39\%, with a slight fall in recall to 98.42\%, shown in Figure 3. With \(\lambda\) at 0.5, we achieved our apex in precision at 99.59\%, though the recall modestly decreased to 97.67\%, represented in Figure 4. An acute variation was observed at a \(\lambda\) of 0.1, where precision soared to 99.93\% and recall waned to 94.19\%, depicted in Figure 5.
+
+The most dramatic alteration arose at the minimum tested \(\lambda\) of 0.005, where the model notched a near-perfect precision of 99.97\% yet a diminished recall of 90.02\%, as illustrated in Figure 6.
+
+A targeted analysis with \(\lambda\) set at 2.0, constrained to the top 200 words, reflected a resulting precision of 98.84\% against a significantly lowered recall of 65.24\%, delineated in Figure 7. This marked performance decrement underscores the trade-off entailed when narrowing the feature set and accentuates the value of a comprehensive vocabulary for maintaining spam detection accuracy.
+
+The effects of feature selection on the classifier's performance, especially regarding the number of top words used for both \(\lambda\) values of 2.0 and 0.005, will be further discussed and analyzed in the 'Results and Discussion' section.
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm_nolambda.png}
+    \caption{Confusion Matrix for Vanilla Naive Bayes Classifier}
+    \label{fig:vanilla_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm2.0.png}
+    \caption{Confusion Matrix for Lambda = 2.0}
+    \label{fig:lambda2_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm1.0.png}
+    \caption{Confusion Matrix for Lambda = 1.0}
+    \label{fig:lambda1_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm0.5.png}
+    \caption{Confusion Matrix for Lambda = 0.5}
+    \label{fig:lambda05_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm0.1.png}
+    \caption{Confusion Matrix for Lambda = 0.1}
+    \label{fig:lambda01_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm0.005.png}
+    \caption{Confusion Matrix for Lambda = 0.005}
+    \label{fig:lambda0005_cm}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{cm2.0_top200.png}
+    \caption{Confusion Matrix for Lambda = 2.0 and Top 200 words}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{recalltopn_2.0.png}
+    \caption{Recall vs Top N Words Lambda = 2.0}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{recalltopn_ 0.005.png}
+    \caption{Recall vs Top N Words Lambda = 0.005}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{precisiontopn_2.0.png}
+    \caption{Precision vs Top N Words Lambda = 2.0}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=1\linewidth]{precisiontopn_0.005.png}
+    \caption{Precision vs Top N Words Lambda = 0.005}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\section{Analysis and Discussion of Results}~\\
+The experimental findings highlight the adeptness of the Naive Bayes classifier in accurately categorizing spam emails, even in its most basic form, i.e., the 'Vanilla' classifier. The precision and recall values obtained from the Vanilla classifier underscore its intrinsic effectiveness. The Vanilla model's longer computation time, compared to its smoothed counterparts, can be attributed to the additional calculations involved in determining the log complement probabilities for each word in the dataset.
+
+The integration of Laplace smoothing, denoted by the parameter \(\lambda\), shows a consistent pattern: as \(\lambda\) approaches zero, precision increases, albeit at the cost of recall. The highest precision at the lowest \(\lambda\) indicates a tendency of the classifier to be more confident, albeit more conservative, in predicting spam. This could suggest that a lower \(\lambda\) leads to a model that is less likely to incorrectly label an email as spam (false positives), which is desirable in applications where missing legitimate emails (false negatives) is more acceptable than mistakenly filtering them out.
+
+However, the drop in recall with a lower \(\lambda\) value raises concerns about the classifier's sensitivity in detecting all spam emails. This indicates a trade-off between the model's precision and its comprehensiveness in recognizing spam. The data suggests that as \(\lambda\) decreases, the classifier becomes more selective, potentially overlooking some spam emails, thereby lowering recall.
+
+The significant decrease in recall with the use of only the top 200 words, despite maintaining a high precision, corroborates the theory that a limited set of features may not adequately represent the diversity of language used in spam and ham emails. This reiterates the importance of a broad vocabulary to capture the nuanced differences between spam and legitimate communications.
+
+When incrementing the top N words, recall progressively increases, which aligns with the expectation that a larger feature set provides a more detailed representation of the dataset, thereby improving the classifier's ability to identify spam across a wider array of examples.
+
+While recall improved with the increase in top N words, it was observed that precision remained relatively stable regardless of the number of features. This suggests that the classifier's ability to correctly identify actual spam emails was not significantly influenced by the expansion of the feature set. A potential reason for this could be that the most predictive features for spam are already captured within the smaller subset of top words, and additional features do not necessarily contribute to distinguishing spam from legitimate emails with greater accuracy.
+
+Comparing these observations to the approach by Hovold (2005), which introduces the idea of word-position-based attributes, it suggests that beyond the frequency of word occurrences, their placement within an email could enhance the classifier's predictive accuracy. Hovold's method, which posits that the position of a word may affect its information value for classification, potentially offers a means to refine the Naive Bayes classifier further.
+
+Hovold's findings also underscore the importance of attribute selection. By removing less frequent words and employing mutual information for feature selection, the classifier can become more efficient without sacrificing accuracy. This could be particularly beneficial in creating personalized spam filters that adapt to individual user's email patterns.
+
+The implications of these results are multifaceted. For one, they encourage the exploration of more complex models that take into account not only the presence of words but also their contextual significance. Moreover, the observed trade-offs between precision and recall warrant a careful consideration of the specific needs and constraints of the intended application when configuring the classifier. Finally, the potential for enhanced performance through attribute selection and model sophistication presents a promising avenue for future research and development in spam detection technology.
+
+\section{Conclusion}~\\
+The comprehensive analysis of the Naive Bayes classifier within the scope of the TREC06 dataset has established its efficacy in spam detection. The results conclusively demonstrated that a Naive Bayes classifier with a Laplace smoothing parameter of \(\lambda=2.0\), utilizing the full vocabulary, provided the best balance between recall and precision, boasting figures of 99.02\% and 98.70\% respectively. This configuration outstripped the performance of models with a reduced vocabulary or altered \(\lambda\) values.
+
+The Vanilla Naive Bayes Classifier, devoid of smoothing, also showcased commendable performance metrics, with a precision of 98.50\% and a recall of 98.64\%. However, the longer computation time, particularly evident with extensive datasets such as TREC06, marks the primary limitation of this approach.
+
+The investigation further revealed that employing only the top N words from the dataset adversely impacted both precision and recall. This outcome aligns with logical expectations, considering that a mere fraction of the entire vocabulary—only 0.23\%—is insufficient to capture the intricate patterns and variations inherent in spam and non-spam emails.
+
+In summation, the study advocates for the application of lambda smoothing as a more time-efficient approach that does not compromise on performance, provided the lambda value is optimally tuned.
+
+Looking ahead, future research should delve into the realms of feature engineering and the exploration of different smoothing techniques. Additionally, a comparative analysis with other machine learning models could yield further insights into the development of even more robust spam detection systems.
+
+\begin{thebibliography}{9}
+
+\bibitem{hovold2005}
+Johan Hovold, \textit{Naive Bayes Spam Filtering using Word Position Attributes},
+In Conference on Email and Anti-Spam, Stanford University, 2005.
+
+\end{thebibliography}
+
+\end{document}
+
+
